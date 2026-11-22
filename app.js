@@ -225,7 +225,7 @@ async function sendMessage(message) {
       if (response.status === 401) sessionStorage.removeItem("jassimSessionToken");
       throw new Error(data.detail || data.error || "تعذر الاتصال بالخادم (" + response.status + ")");
     }
-    const answer = typeof data.answer === "string" ? data.answer : typeof data.reply === "string" ? data.reply : "";
+    const answer = typeof data.answer === "string" ? data.answer : typeof data.reply === "string" ? data.reply : typeof data.message === "string" ? data.message : typeof data.content === "string" ? data.content : data.scene || data.objects ? JSON.stringify(data.scene || { objects: data.objects }) : "";
     if (!answer.trim()) throw new Error("استجابة الخادم لا تحتوي على نص جواب صالح");
     waiting.remove();
     const sceneData = extractSceneResponse(answer);
@@ -242,7 +242,7 @@ async function sendMessage(message) {
         createObjects(fallbackScene);
         $("previewStatus").textContent = "معاينة محلية مساعدة · لم يُرجع النموذج بيانات مشهد";
         addMessage("assistant", answer + "\n\nأنشأت لك معاينة محلية مساعدة لأن رد النموذج لم يتضمن بيانات مشهد ثلاثي الأبعاد. هذه المعاينة ليست توليداً من النموذج.");
-      } else addMessage("assistant", answer);
+      } else if (/^\\s*[\\[{]/.test(answer)) {\n      addMessage("assistant", "وصل رد من النموذج، لكنه لا يحتوي على مشهد ثلاثي الأبعاد بصيغة مفهومة. لم أعرض بيانات JSON الخام؛ أعد صياغة طلب البناء أو حاول مرة أخرى.");\n    } else addMessage("assistant", answer);
     }
     if (data.conversation_id) conversationId = data.conversation_id;
     gatewayReady = true; gatewayVerified = true;
