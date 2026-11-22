@@ -1,5 +1,6 @@
 import { readFileSync } from "node:fs";
 import assert from "node:assert/strict";
+import { buildLocalDemoScene, extractSceneResponse } from "../scene.js";
 
 const html = readFileSync(new URL("../index.html", import.meta.url), "utf8");
 const css = readFileSync(new URL("../styles.css", import.meta.url), "utf8");
@@ -53,4 +54,17 @@ assert.match(app, /data-prompt/, "quick prompt suggestions must be wired");
 assert.match(css, /grid-template-columns:minmax\(320px,.9fr\) minmax\(0,1.1fr\)/, "desktop chat and preview must sit side by side");
 assert.match(css, /@media\(max-width:760px\)/, "mobile layout must be responsive");
 
-console.log("Chat UI, side-by-side preview, private gateway wiring, and scene rendering checks passed.");
+const islandDemo = buildLocalDemoScene("أنشئ جزيرة استوائية فيها أشجار وبحيرة");
+assert.ok(Array.isArray(islandDemo) && islandDemo.length >= 6, "island prompt must produce a non-empty local preview");
+assert.ok(islandDemo.some(item => item.kind === "water"), "island preview must include water");
+assert.ok(islandDemo.some(item => item.kind === "tree"), "island preview must include trees");
+assert.equal(buildLocalDemoScene("اشرح لي قانون نيوتن"), null, "unrelated chat prompts must not create a demo scene");
+
+const parsedScene = extractSceneResponse(JSON.stringify({objects:[
+  {kind:"tree",position:[0,0,0],scale:1,color:"#29966b"},
+  {kind:"water",position:[2,0,2],scale:2,color:"#268bb5"}
+]}));
+assert.equal(parsedScene.length, 2, "valid model scene JSON must be parsed and normalized");
+assert.equal(extractSceneResponse("هذا شرح نصي فقط ولا يحتوي على مشهد"), null, "plain prose must not be mistaken for scene JSON");
+
+console.log("Chat UI, private gateway, AI scene parsing, and local island fallback checks passed.");
