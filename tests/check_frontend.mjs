@@ -73,4 +73,25 @@ const parsedScene = extractSceneResponse(JSON.stringify({objects:[
 assert.equal(parsedScene.length, 2, "valid model scene JSON must be parsed and normalized");
 assert.equal(extractSceneResponse("هذا شرح نصي فقط ولا يحتوي على مشهد"), null, "plain prose must not be mistaken for scene JSON");
 
+
+const wrappedScene = extractSceneResponse("نتيجة النموذج: \`\`\`json\\n" + JSON.stringify({data:{scene:{objects:[
+  {kind:"palm",position:[1,0,2],scale:1,color:"#239b69",name:"نخلة"}
+]}}}) + "\\n\`\`\`");
+assert.equal(wrappedScene.length, 1, "fenced nested scene payloads must be parsed");
+assert.equal(wrappedScene[0].kind, "palm", "nested scene parsing must preserve object kinds");
+
+const prefixedScene = extractSceneResponse("تم إنشاء المشهد: " + JSON.stringify({objects:[
+  {kind:"building",position:[0,0,0],floors:4,color:"#7187ae"}
+]}) + " انتهى.");
+assert.equal(prefixedScene.length, 1, "JSON surrounded by explanatory prose must be extracted");
+
+const escapedScene = extractSceneResponse(JSON.stringify({objects:[
+  {kind:"box",position:[0,0,0],color:"#5688d8",name:"مبنى {قديم} \\"مميز\\""}
+]}));
+assert.equal(escapedScene.length, 1, "braces and escaped quotes inside strings must not break JSON extraction");
+
+assert.equal(extractSceneResponse(JSON.stringify({objects:[{kind:"unknown",position:[0,0,0]}]})), null,
+  "unsupported-only model scenes must be rejected rather than shown as successful");
+assert.equal(extractSceneResponse(""), null, "empty model output must be rejected");
+
 console.log("Chat UI, private gateway, AI scene parsing, and local island fallback checks passed.");
