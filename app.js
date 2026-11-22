@@ -119,7 +119,25 @@ function addMessage(role, text) {
   const bubble = document.createElement("div"); bubble.className = "bubble";
   const p = document.createElement("p"); p.textContent = text; bubble.appendChild(p);
   const time = document.createElement("span"); time.className = "message-time"; time.textContent = role === "user" ? "أنت" : "JASSIM";
-  bubble.appendChild(time); article.append(avatar, bubble); $("messages").appendChild(article);
+  bubble.appendChild(time);
+  if (role === "assistant") {
+    const copy = document.createElement("button");
+    copy.type = "button";
+    copy.className = "message-copy";
+    copy.textContent = "نسخ الرد";
+    copy.setAttribute("aria-label", "نسخ رد JASSIM");
+    copy.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(text);
+        copy.textContent = "تم النسخ";
+        copy.setAttribute("aria-label", "تم نسخ الرد");
+      } catch {
+        copy.textContent = "تعذر النسخ";
+      }
+    });
+    bubble.appendChild(copy);
+  }
+  article.append(avatar, bubble); $("messages").appendChild(article);
   $("messages").scrollTop = $("messages").scrollHeight; return article;
 }
 
