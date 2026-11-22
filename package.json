@@ -1,0 +1,7 @@
+{
+  "name": "jassim-game-app-builder",
+  "private": true,
+  "version": "0.2.1",
+  "type": "module",
+  "scripts": { "check": "node --check app.js" }
+}
