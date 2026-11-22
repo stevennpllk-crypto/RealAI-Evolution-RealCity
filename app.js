@@ -47,6 +47,21 @@ function addTree(x, z, color = "#29966b") {
   group.traverse(n => { if (n.isMesh) n.castShadow = true; });
   scene.add(group); objects.push(group);
 }
+function addPalm(x, z, color = "#239b69") {
+  const group = new THREE.Group(); group.name = "نخلة استوائية";
+  const trunk = new THREE.Mesh(new THREE.CylinderGeometry(.12, .2, 2.8, 9), mat("#8b6545"));
+  trunk.position.y = 1.4; trunk.rotation.z = -.08; group.add(trunk);
+  for (let i = 0; i < 7; i++) {
+    const angle = i * Math.PI * 2 / 7;
+    const leaf = new THREE.Mesh(new THREE.ConeGeometry(.22, 2.2, 7), mat(color));
+    leaf.position.set(Math.cos(angle) * .85, 2.85 + Math.sin(i * 1.7) * .12, Math.sin(angle) * .85);
+    leaf.rotation.z = -Math.cos(angle) * .9; leaf.rotation.x = Math.sin(angle) * .9;
+    group.add(leaf);
+  }
+  group.position.set(x, 0, z);
+  group.traverse(n => { if (n.isMesh) n.castShadow = true; });
+  scene.add(group); objects.push(group);
+}
 function addBuilding(x, z, color = "#7187ae", floors = 3) {
   floors = Math.max(1, Math.min(12, Number(floors) || 3));
   const group = new THREE.Group(); group.name = "مبنى";
@@ -66,6 +81,9 @@ function createObjects(list) {
   for (const o of valid) {
     const [x, y, z] = o.position, color = o.color, kind = o.kind, scale = o.scale;
     if (kind === "tree") { addTree(x, z, color); objects.at(-1).scale.setScalar(scale); }
+    else if (kind === "palm") { addPalm(x, z, color); objects.at(-1).scale.setScalar(scale); }
+    else if (kind === "island") { const m = addMesh(new THREE.SphereGeometry(1, 48, 32), color, o.name, x, y, z); m.scale.set(6 * scale, .48 * scale, 4.2 * scale); }
+    else if (kind === "rock") { const m = addMesh(new THREE.DodecahedronGeometry(.65, 0), color, o.name, x, y + .35, z); m.scale.setScalar(scale); }
     else if (kind === "building") { addBuilding(x, z, color, o.floors); objects.at(-1).scale.setScalar(scale); }
     else if (kind === "sphere") { const m = addMesh(new THREE.SphereGeometry(.75, 24, 16), color, o.name, x, y, z); m.scale.setScalar(scale); }
     else if (kind === "road") { const m = addMesh(new THREE.BoxGeometry(5, .12, 1.2), color, o.name, x, y, z); m.scale.setScalar(scale); }
@@ -191,7 +209,7 @@ async function sendMessage(message) {
     let response;
     const buildIntent = /(?:أنشئ|انشئ|ابنِ|ابني|ابن|اصنع|صمّم|صمم|بناء|ابنِ لي|أريد بناء|اريد بناء|create|build|design|make) /i.test(text + " ");
     const sceneDirective = buildIntent
-      ? `أنت الآن محرك إنشاء مشاهد ثلاثية الأبعاد داخل JASSIM BUILD STUDIO. نفّذ طلب المستخدم بصرياً. أعد JSON صالحاً فقط دون شرح أو Markdown، بالشكل التالي: {"objects":[{"kind":"tree|building|sphere|road|water|box","position":[x,0,z],"scale":1,"floors":2,"color":"#RRGGBB","name":"اسم العنصر"}]}. أنشئ من 8 إلى 24 عنصراً مناسبة للوصف، وزّعها مكانياً، واجعل الماء والشاطئ والأشجار عناصر منفصلة عند طلب جزيرة. لا تكتب أي نص خارج JSON. طلب المستخدم: `
+      ? `أنت الآن محرك إنشاء مشاهد ثلاثية الأبعاد داخل JASSIM BUILD STUDIO. نفّذ طلب المستخدم بصرياً. أعد JSON صالحاً فقط دون شرح أو Markdown، بالشكل التالي: {"objects":[{"kind":"tree|palm|island|rock|building|sphere|road|water|box","position":[x,0,z],"scale":1,"floors":2,"color":"#RRGGBB","name":"اسم العنصر"}]}. أنشئ من 8 إلى 24 عنصراً مناسبة للوصف، وزّعها مكانياً، واجعل الماء والشاطئ والأشجار عناصر منفصلة عند طلب جزيرة. لا تكتب أي نص خارج JSON. طلب المستخدم: `
       : "";
     const modelMessage = sceneDirective + text;
     try {
