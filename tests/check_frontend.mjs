@@ -28,6 +28,8 @@ assert.match(app, /normalizeSceneObjects/, "scene objects must be validated befo
 assert.match(app, /fetch\(base\s*\+\s*"\/api\/chat"/, "chat must call the private JASSIM server directly");
 assert.match(app, /"Authorization":\s*"Bearer "\s*\+\s*token/, "chat must use the authenticated JASSIM session");
 assert.match(app, /fetch\(base\s*\+\s*"\/api\/auth\/login"/, "login must authenticate against JASSIM directly");
+assert.match(app, /const settingsPanel = \$\("loginJassim"\)\.closest\("details"\);\s*if \(settingsPanel\) settingsPanel\.open = false;/, "successful login must close the actual settings details element safely");
+assert.doesNotMatch(app, /\$\("settings"\)\.open/, "login must not dereference a nonexistent settings element");
 assert.match(app, /sessionStorage\.setItem\("jassimSessionToken"/, "session token must stay in tab-scoped storage");
 assert.match(app, /DEFAULT_JASSIM_SERVER\s*=\s*"https:\/\/jassim-ai-core-final-production\.up\.railway\.app"/, "the Railway JASSIM host must be preconfigured");
 assert.match(app, /conversation_id:\s*conversationId/, "chat must preserve conversation context");
