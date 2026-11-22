@@ -171,3 +171,27 @@ button:focus-visible,a:focus-visible,summary:focus-visible,textarea:focus-visibl
 @media(prefers-reduced-motion:reduce){
   *,*::before,*::after{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}
 }
+
+
+/* Reply actions and clearer interaction states */
+.message-copy{
+  display:inline-flex;align-items:center;justify-content:center;
+  min-height:32px;margin-top:8px;padding:5px 11px;
+  border:1px solid #505050;border-radius:18px;
+  background:#292929;color:#cfcfcf;font-size:11px;
+  cursor:pointer;transition:background .16s,border-color .16s,color .16s
+}
+.message-copy:hover{background:#3a3a3a;border-color:#777;color:#fff}
+.message-copy:focus-visible{outline:2px solid #a9c5ff;outline-offset:3px}
+.message-copy:active{transform:scale(.98)}
+.composer button:disabled{filter:grayscale(.35);opacity:.55}
+.quick-prompts button:focus-visible,.icon-btn:focus-visible{
+  outline:2px solid #a9c5ff;outline-offset:3px
+}
+.top-status{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.settings-pop{max-height:min(78dvh,620px);overflow-y:auto}
+@media(max-width:760px){
+  .message-copy{min-height:36px;padding:6px 13px}
+  .composer{padding-inline:10px}
+  .preview-actions{gap:7px}
+}
