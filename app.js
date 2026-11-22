@@ -234,7 +234,7 @@ async function sendMessage(message) {
         createObjects(sceneData);
         addMessage("assistant", "أنشأت معاينة ثلاثية الأبعاد من بيانات المشهد التي أعادها JASSIM. يمكنك طلب التعديلات.");
       } catch (err) {
-        addMessage("assistant", "وصل رد JASSIM لكن تعذر عرض المشهد: " + err.message + "\n\n" + answer);
+        addMessage("assistant", "وصلت بيانات من JASSIM لكن تعذر عرض المشهد. لم أعرض البيانات الخام. جرّب طلباً أبسط أو أعد المحاولة.");
       }
     } else {
       const fallbackScene = buildLocalDemoScene(text);
