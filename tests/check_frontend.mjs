@@ -24,6 +24,10 @@ assert.doesNotMatch(html, /TransformControls|buildingFloors|sculptBtn/, "advance
 assert.match(app, /new THREE\.WebGLRenderer/, "Three.js preview renderer must be initialized");
 assert.match(app, /function createObjects\(list\)/, "scene response must create preview objects");
 assert.match(app, /extractSceneResponse/, "AI scene JSON must use the tested scene parser");
+assert.match(app, /محرك إنشاء مشاهد ثلاثية الأبعاد/, "build requests must explicitly ask JASSIM for structured 3D scene output");
+assert.match(app, /أنشئ من 8 إلى 24 عنصراً/, "scene requests must ask for a useful multi-object scene");
+assert.match(app, /const fallbackScene = buildLocalDemoScene\(text\)/, "a local demo preview must prevent a blank viewport when the model returns prose only");
+assert.match(app, /لم يُرجع النموذج بيانات مشهد/, "local fallback previews must be labeled honestly");
 assert.match(app, /normalizeSceneObjects/, "scene objects must be validated before rendering");
 assert.match(app, /fetch\(base\s*\+\s*"\/api\/chat"/, "chat must call the private JASSIM server directly");
 assert.match(app, /"Authorization":\s*"Bearer "\s*\+\s*token/, "chat must use the authenticated JASSIM session");
