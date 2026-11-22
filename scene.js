@@ -35,7 +35,7 @@ export function extractSceneResponse(answer) {
     if (typeof value === "string" && value.trim() && !candidates.includes(value.trim())) candidates.push(value.trim());
   };
   add(source);
-  for (const match of source.matchAll(/```(?:json)?\\s*([\\s\\S]*?)\\s*```/gi)) add(match[1]);
+  for (const match of source.matchAll(/```(?:json)?\s*([\s\S]*?)\s*```/gi)) add(match[1]);
 
   // Extract balanced JSON objects without being confused by braces inside quoted strings.
   for (let start = 0; start < source.length; start++) {
