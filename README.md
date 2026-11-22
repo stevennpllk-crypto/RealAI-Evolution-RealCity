@@ -3,7 +3,9 @@
 Arabic-first experimental browser editor for app/site concepts and interactive 3D scene prototypes.
 
 ## Current editor features
-- Keyboard shortcuts: W (move), E (rotate), R (scale), Ctrl+D (duplicate), Delete (remove), and Escape (clear selection). Shortcuts are ignored while typing in form fields.
+- Undo/redo controls and Ctrl+Z / Ctrl+Y shortcuts. History snapshots preserve imported GLB object geometry and materials in memory; history is limited to 40 states and is not persisted after a page reload.
+- Keyboard shortcuts: W (move), E (rotate), R (scale), Ctrl+D (duplicate), Ctrl+Z (undo), Ctrl+Y (redo), Delete (remove), and Escape (clear selection). Shortcuts are ignored while typing in form fields.
+- In-memory undo/redo history (up to 40 checkpoints) deep-clones mesh geometry and materials, including imported GLB groups, and batches templates/project loads into one action. History is session-only and is not persisted across reloads.
 - Three.js 3D viewport with orbit, zoom, and selection.
 - Starter scenes: island, city, forest, snow.
 - Scene objects: boxes, spheres, trees, grouped buildings, roads, procedural terrain patches, and water surfaces.
