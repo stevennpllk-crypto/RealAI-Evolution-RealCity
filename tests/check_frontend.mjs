@@ -11,6 +11,7 @@ assert.match(html, /id="importGLBBtn"/, "GLB import button must exist");
 assert.match(app, /async function importGLBFile\(file\)/, "GLB import handler must exist");
 assert.match(app, /examples\/jsm\/loaders\/GLTFLoader\.js/, "GLTFLoader must load on demand");
 assert.match(app, /50\*1024\*1024/, "GLB import size must be capped");
+assert.match(app, /function pack\(\)\{if\(items\.some\(o=>o\.userData\.kind==="importedAsset"\)\)/, "JSON saves must refuse lossy imported GLB assets");
 assert.match(app, /\$\("importGLBBtn"\)\.onclick/, "GLB import button must be wired");
 assert.match(app, /examples\/jsm\/exporters\/GLTFExporter\.js/, "GLTFExporter must load on demand");
 assert.match(app, /binary:true/, "GLB export must request binary glTF");
