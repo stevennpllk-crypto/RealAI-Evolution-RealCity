@@ -45,3 +45,38 @@ export function extractSceneResponse(answer) {
   }
   return null;
 }
+
+
+// Deterministic offline preview templates. This is explicitly a demo, not AI inference.
+export function buildLocalDemoScene(prompt) {
+  if (typeof prompt !== "string" || !prompt.trim()) return null;
+  const text = prompt.toLowerCase();
+  const items = [];
+  const add = (kind, x, z, extra = {}) => items.push({
+    kind, position: [x, 0, z], color: "#5688d8", scale: 1, ...extra
+  });
+  const island = /جزير|island|شاطئ|بحر|استوائ/.test(text);
+  const house = /منزل|بيت|فيلا|house|villa/.test(text);
+  const city = /مدين|ناطحات|عمارات|مبان|city|buildings/.test(text);
+  const garden = /حديق|أشجار|اشجار|غاب|garden|forest/.test(text);
+  if (!island && !house && !city && !garden) return null;
+  if (island) {
+    add("water", 0, 0, {color:"#268bb5",scale:3});
+    add("box", 0, .2, {color:"#d7c18a",scale:1.8,name:"رمال الجزيرة"});
+    for (const [x,z] of [[-2,-1],[2,-1],[-1,2],[2,2]]) add("tree",x,z,{color:"#29966b"});
+    add("building",0,-2,{color:"#e2a85d",floors:1});
+  } else if (house) {
+    add("building",0,0,{color:"#d8dce5",floors:2,scale:1.5});
+    add("road",0,3,{color:"#343b48",scale:1.5});
+    add("tree",-2,-1); add("tree",2,-1);
+    add("box",-2,2,{color:"#5a9b62",name:"حديقة"});
+  } else if (city) {
+    for (const [x,z,f] of [[-3,-2,5],[0,-2,8],[3,-2,4],[-3,2,3],[3,2,6]]) add("building",x,z,{floors:f,color:"#7187ae"});
+    add("road",0,0,{color:"#343b48",scale:2});
+    add("tree",-4,3); add("tree",4,3);
+  } else {
+    for (const [x,z] of [[-2,-2],[0,-2],[2,-2],[-2,2],[2,2],[0,3]]) add("tree",x,z);
+    add("box",0,0,{color:"#5a9b62",scale:2,name:"مساحة خضراء"});
+  }
+  return normalizeSceneObjects(items);
+}
