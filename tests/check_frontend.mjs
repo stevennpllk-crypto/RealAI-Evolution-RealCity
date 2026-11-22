@@ -20,7 +20,8 @@ assert.doesNotMatch(html, /TransformControls|buildingFloors|sculptBtn/, "advance
 
 assert.match(app, /new THREE\.WebGLRenderer/, "Three.js preview renderer must be initialized");
 assert.match(app, /function createObjects\(list\)/, "scene response must create preview objects");
-assert.match(app, /function extractScene\(answer\)/, "AI scene JSON must be extracted from responses");
+assert.match(app, /extractSceneResponse/, "AI scene JSON must use the tested scene parser");
+assert.match(app, /normalizeSceneObjects/, "scene objects must be validated before rendering");
 assert.match(app, /fetch\(base\+"\/api\/ai\/generate"/, "chat must call the configured private JASSIM gateway");
 assert.match(app, /conversation_id:conversationId/, "chat must preserve conversation context");
 assert.match(app, /function addMessage\(role,text\)/, "chat messages must be rendered");
