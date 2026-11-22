@@ -242,7 +242,9 @@ async function sendMessage(message) {
         createObjects(fallbackScene);
         $("previewStatus").textContent = "معاينة محلية مساعدة · لم يُرجع النموذج بيانات مشهد";
         addMessage("assistant", answer + "\n\nأنشأت لك معاينة محلية مساعدة لأن رد النموذج لم يتضمن بيانات مشهد ثلاثي الأبعاد. هذه المعاينة ليست توليداً من النموذج.");
-      } else if (/^\\s*[\\[{]/.test(answer)) {\n      addMessage("assistant", "وصل رد من النموذج، لكنه لا يحتوي على مشهد ثلاثي الأبعاد بصيغة مفهومة. لم أعرض بيانات JSON الخام؛ أعد صياغة طلب البناء أو حاول مرة أخرى.");\n    } else addMessage("assistant", answer);
+      } else if (answer.trim().startsWith("{") || answer.trim().startsWith("[")) {
+        addMessage("assistant", "وصل رد من النموذج، لكنه لا يحتوي على مشهد ثلاثي الأبعاد بصيغة مفهومة. لم أعرض بيانات JSON الخام؛ أعد صياغة طلب البناء أو حاول مرة أخرى.");
+      } else addMessage("assistant", answer);
     }
     if (data.conversation_id) conversationId = data.conversation_id;
     gatewayReady = true; gatewayVerified = true;
