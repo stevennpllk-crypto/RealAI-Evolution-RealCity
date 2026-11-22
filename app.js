@@ -191,7 +191,7 @@ async function sendMessage(message) {
     let response;
     const buildIntent = /(?:أنشئ|انشئ|ابنِ|ابني|ابن|اصنع|صمّم|صمم|بناء|ابنِ لي|أريد بناء|اريد بناء|create|build|design|make) /i.test(text + " ");
     const sceneDirective = buildIntent
-      ? "أنت الآن محرك إنشاء مشاهد ثلاثية الأبعاد داخل JASSIM BUILD STUDIO. نفّذ طلب المستخدم بصرياً. أعد JSON صالحاً فقط دون شرح أو Markdown، بالشكل التالي: {\\"objects\\":[{\\"kind\\":\\"tree|building|sphere|road|water|box\\",\\"position\\":[x,0,z],\\"scale\\":1,\\"floors\\":2,\\"color\\":\\"#RRGGBB\\",\\"name\\":\\"اسم العنصر\\"}]}. أنشئ من 8 إلى 24 عنصراً مناسبة للوصف، وزّعها مكانياً، واجعل الماء والشاطئ والأشجار عناصر منفصلة عند طلب جزيرة. لا تكتب أي نص خارج JSON. طلب المستخدم: "
+      ? `أنت الآن محرك إنشاء مشاهد ثلاثية الأبعاد داخل JASSIM BUILD STUDIO. نفّذ طلب المستخدم بصرياً. أعد JSON صالحاً فقط دون شرح أو Markdown، بالشكل التالي: {"objects":[{"kind":"tree|building|sphere|road|water|box","position":[x,0,z],"scale":1,"floors":2,"color":"#RRGGBB","name":"اسم العنصر"}]}. أنشئ من 8 إلى 24 عنصراً مناسبة للوصف، وزّعها مكانياً، واجعل الماء والشاطئ والأشجار عناصر منفصلة عند طلب جزيرة. لا تكتب أي نص خارج JSON. طلب المستخدم: `
       : "";
     const modelMessage = sceneDirective + text;
     try {
