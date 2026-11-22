@@ -6,6 +6,9 @@ Arabic-first experimental browser editor for app/site concepts and interactive 3
 - Three.js 3D viewport with orbit, zoom, and selection.
 - Starter scenes: island, city, forest, snow.
 - Scene objects: boxes, spheres, trees, grouped buildings, roads, procedural terrain patches, and water surfaces.
+- Road-grid generation and interactive terrain sculpting with raise/lower modes and adjustable brush radius/strength.
+- Sculpted terrain vertex heights are preserved in local saves and JSON scene exports, and restored on import.
+- Startup restores the last saved project instead of immediately replacing it with the starter island.
 - Rename, move, scale, recolor, duplicate, and delete scene objects.
 - Local project save, JSON import, and JSON export. Project data preserves supported object types and transforms.
 - Optional connection to a self-hosted JASSIM AI chat API through the private FastAPI gateway.
