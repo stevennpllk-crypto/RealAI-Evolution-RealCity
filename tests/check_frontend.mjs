@@ -5,7 +5,7 @@ const html = readFileSync(new URL("../index.html", import.meta.url), "utf8");
 const app = readFileSync(new URL("../app.js", import.meta.url), "utf8");
 
 assert.match(html, /id="exportGLBBtn"/, "GLB export button must exist");
-assert.match(html, /<i>0\.9<\/i>/, "editor version label must be current");
+assert.match(html, /<i>0\.2\.2<\/i>/, "editor version label must match the current release");
 assert.match(app, /async function exportGLB\(\)/, "GLB export handler must exist");
 assert.match(html, /id="importGLBBtn"/, "GLB import button must exist");
 assert.match(app, /async function importGLBFile\(file\)/, "GLB import handler must exist");
