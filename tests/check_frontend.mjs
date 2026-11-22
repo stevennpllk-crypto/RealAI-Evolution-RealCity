@@ -46,6 +46,8 @@ assert.match(app, /function recordHistory\(\)/, "history checkpoint function mus
 assert.match(app, /function restoreHistory\(nextIndex\)/, "history restore function must exist");
 assert.match(app, /function undo\(\)/, "undo action must exist");
 assert.match(app, /function redo\(\)/, "redo action must exist");
+assert.match(app, /refresh\(false\);persistLocalProject\(\)/, "undo and redo restores must update the local saved project");
+assert.match(app, /let c=cloneForHistory\(selected\)/, "duplicated objects must own cloned geometry and materials");
 assert.match(app, /event\.key\.toLowerCase\(\)==="z"/, "Ctrl+Z shortcut must exist");
 assert.match(app, /event\.key\.toLowerCase\(\)==="y"/, "Ctrl+Y shortcut must exist");
 assert.match(app, /historyBatch\(\(\)=>buildTemplate\(t\)\)/, "template generation must be a single history action");
