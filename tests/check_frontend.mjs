@@ -27,7 +27,7 @@ assert.match(app, /function createObjects\(list\)/, "scene response must create 
 assert.match(app, /function addPalm\(x, z, color/, "Three.js renderer must create tropical palm trees");
 assert.match(app, /kind === "island"/, "Three.js renderer must create raised island terrain");
 assert.match(app, /kind === "rock"/, "Three.js renderer must create decorative rocks");
-assert.match(app, /tree\\\|palm\\\|island\\\|rock/, "scene generation prompt must advertise tropical scene object types");
+assert.ok(app.includes("tree|palm|island|rock"), "scene generation prompt must advertise tropical scene object types");
 assert.match(app, /extractSceneResponse/, "AI scene JSON must use the tested scene parser");
 assert.match(app, /محرك إنشاء مشاهد ثلاثية الأبعاد/, "build requests must explicitly ask JASSIM for structured 3D scene output");
 assert.match(app, /أنشئ من 8 إلى 24 عنصراً/, "scene requests must ask for a useful multi-object scene");
