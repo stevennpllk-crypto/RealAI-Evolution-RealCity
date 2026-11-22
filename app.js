@@ -243,9 +243,7 @@ async function sendMessage(message) {
         $("previewStatus").textContent = "معاينة محلية مساعدة · لم يُرجع النموذج بيانات مشهد";
         const isStructured = answer.trim().startsWith("{") || answer.trim().startsWith("[");
         const explanation = isStructured ? "لم يُرجع النموذج بيانات مشهد قابلة للعرض." : answer;
-        addMessage("assistant", explanation + "
-
-أنشأت لك معاينة محلية مساعدة. هذه المعاينة ليست توليداً من النموذج.");
+        addMessage("assistant", `${explanation}\n\nأنشأت لك معاينة محلية مساعدة. هذه المعاينة ليست توليداً من النموذج.`);
       } else if (answer.trim().startsWith("{") || answer.trim().startsWith("[")) {
         addMessage("assistant", "وصل رد من النموذج، لكنه لا يحتوي على مشهد ثلاثي الأبعاد بصيغة مفهومة. لم أعرض بيانات JSON الخام؛ أعد صياغة طلب البناء أو حاول مرة أخرى.");
       } else addMessage("assistant", answer);
