@@ -26,7 +26,7 @@ assert.match(app, /function createObjects\(list\)/, "scene response must create 
 assert.match(app, /extractSceneResponse/, "AI scene JSON must use the tested scene parser");
 assert.match(app, /normalizeSceneObjects/, "scene objects must be validated before rendering");
 assert.match(app, /fetch\(base\s*\+\s*"\/api\/chat"/, "chat must call the private JASSIM server directly");
-assert.match(app, /Authorization:\s*"Bearer "\s*\+\s*token/, "chat must use the authenticated JASSIM session");
+assert.match(app, /"Authorization":\s*"Bearer "\s*\+\s*token/, "chat must use the authenticated JASSIM session");
 assert.match(app, /fetch\(base\s*\+\s*"\/api\/auth\/login"/, "login must authenticate against JASSIM directly");
 assert.match(app, /sessionStorage\.setItem\("jassimSessionToken"/, "session token must stay in tab-scoped storage");
 assert.match(app, /DEFAULT_JASSIM_SERVER\s*=\s*"https:\/\/jassim-ai-core-final-production\.up\.railway\.app"/, "the Railway JASSIM host must be preconfigured");
