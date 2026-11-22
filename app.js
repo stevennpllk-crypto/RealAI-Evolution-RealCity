@@ -150,7 +150,8 @@ $("loginJassim").onclick = async () => {
     gatewayReady = true; gatewayVerified = false;
     $("loginStatus").textContent = "تم تسجيل الدخول إلى JASSIM بنجاح. يمكنك بدء المحادثة.";
     $("connectionStatus").textContent = "تم الاتصال بحساب JASSIM";
-    $("settings").open = false;
+    const settingsPanel = $("loginJassim").closest("details");
+    if (settingsPanel) settingsPanel.open = false;
   } catch (error) {
     sessionStorage.removeItem("jassimSessionToken");
     $("loginStatus").textContent = "فشل تسجيل الدخول: " + error.message;
