@@ -61,6 +61,6 @@ assert.match(html, /id="generateBtn"/, "AI scene generation action must remain a
 console.log("Simplified Arabic workspace layout checks passed.");
 
 assert.match(html, /id="projectName"/, "project name field must exist");
-assert.match(app, /function persistLocalProject\\(\\)/, "automatic local persistence must exist");
-assert.match(app, /persistLocalProject\\(\\)\\s*}/, "history checkpoints must persist the project");
-assert.match(app, /name:\\(\\$\\("projectName"\\)\\.value\\.trim\\(\\)\\|\\|"مشروعي الأول"\\)/, "project name must be included in exported project data");
+assert.ok(app.includes("function persistLocalProject()"), "automatic local persistence must exist");
+assert.ok(app.includes("updateHistoryButtons();persistLocalProject()"), "history checkpoints must persist the project");
+assert.ok(app.includes('name:($("projectName").value.trim()||"مشروعي الأول")'), "project name must be included in exported project data");
