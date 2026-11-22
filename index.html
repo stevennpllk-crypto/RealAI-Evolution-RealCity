@@ -16,9 +16,17 @@
     <summary aria-label="إعدادات الاتصال" title="إعدادات الاتصال">⚙</summary>
     <div class="settings-pop">
       <label for="gatewayUrl">رابط خادم JASSIM AI</label>
-      <input id="gatewayUrl" type="url" placeholder="https://your-private-server.example">
-      <button id="saveGateway" class="small-primary">حفظ الاتصال</button>
-      <p>أدخل عنوان بوابتك الخاصة. لا تضع مفتاح API هنا.</p>
+      <input id="gatewayUrl" type="url" placeholder="https://jassim-ai-core-final-production.up.railway.app">
+      <button id="saveGateway" class="small-primary">حفظ عنوان الخادم</button>
+      <div class="auth-fields">
+        <label for="accountEmail">البريد الإلكتروني لحساب JASSIM</label>
+        <input id="accountEmail" type="email" autocomplete="username" placeholder="البريد الإلكتروني">
+        <label for="accountPassword">كلمة مرور الحساب</label>
+        <input id="accountPassword" type="password" autocomplete="current-password" placeholder="كلمة المرور">
+        <button id="loginJassim" class="small-primary">اتصال وتسجيل الدخول</button>
+        <p id="loginStatus" role="status">تُرسل بيانات الدخول مباشرة إلى خادم JASSIM عبر HTTPS ولا تُحفظ كلمة المرور.</p>
+      </div>
+      <p>الخادم الخاص محدد مسبقاً. لا تضع مفتاح API هنا.</p>
     </div>
   </details>
 </header>
