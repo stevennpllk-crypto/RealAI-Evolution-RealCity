@@ -3,6 +3,7 @@
 Arabic-first experimental browser editor for app/site concepts and interactive 3D scene prototypes.
 
 ## Current editor features
+- Keyboard shortcuts: W (move), E (rotate), R (scale), Ctrl+D (duplicate), Delete (remove), and Escape (clear selection). Shortcuts are ignored while typing in form fields.
 - Three.js 3D viewport with orbit, zoom, and selection.
 - Starter scenes: island, city, forest, snow.
 - Scene objects: boxes, spheres, trees, grouped buildings, roads, procedural terrain patches, and water surfaces.
