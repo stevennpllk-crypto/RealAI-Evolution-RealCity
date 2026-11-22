@@ -51,9 +51,15 @@ function addMessage(role,text){const article=document.createElement("article");a
 const extractScene=extractSceneResponse;
 const gateway=$("gatewayUrl");
 gateway.value=localStorage.getItem("jassimGatewayUrl")||"";
+let gatewayReady=false;
 let gatewayVerified=false;
-function connectionLabel(){return gatewayVerified?"الخادم يستجيب":gateway.value.trim()?"عنوان محفوظ، لم يتم التحقق":"لم يتم إعداد الخادم"}
+function connectionLabel(){
+  if(gatewayVerified)return "تم اختبار رد JASSIM بنجاح";
+  if(gatewayReady)return "البوابة تستجيب؛ رد النموذج لم يُختبر";
+  return gateway.value.trim()?"عنوان محفوظ، لم يتم التحقق":"لم يتم إعداد الخادم";
+}
 async function verifyGateway(base){
+  gatewayReady=false;
   gatewayVerified=false;
   if(!base){$("connectionStatus").textContent=connectionLabel();return false}
   $("connectionStatus").textContent="جارٍ التحقق من الخادم…";
@@ -62,9 +68,9 @@ async function verifyGateway(base){
   try{
     const response=await fetch(base+"/health",{method:"GET",cache:"no-store",signal:controller.signal});
     const data=await response.json().catch(()=>({}));
-    gatewayVerified=response.ok&&data.status==="ok"&&data.upstream_configured===true;
-    $("connectionStatus").textContent=gatewayVerified?"الخادم يستجيب": "تعذر التحقق من الخادم";
-    return gatewayVerified;
+    gatewayReady=response.ok&&data.status==="ok"&&data.upstream_configured===true;
+    $("connectionStatus").textContent=gatewayReady?"البوابة تستجيب؛ رد النموذج لم يُختبر":"تعذر التحقق من البوابة أو إعداد النموذج";
+    return gatewayReady;
   }catch{
     $("connectionStatus").textContent="تعذر التحقق من الخادم";
     return false;
@@ -81,7 +87,7 @@ $("saveGateway").onclick=async()=>{
 };
 let conversationId="builder-"+(crypto.randomUUID?.()||Date.now());
 function setBusy(busy){$("sendBtn").disabled=busy;$("prompt").disabled=busy;$("connectionStatus").textContent=busy?"JASSIM يفكر…":connectionLabel()}
-async function sendMessage(message){const text=message.trim();if(!text)return;addMessage("user",text);$("prompt").value="";$("prompt").style.height="auto";const base=gateway.value.trim().replace(/\/+$/,"");if(!base){addMessage("assistant","واجهة المحادثة جاهزة، لكن لم يتم إعداد عنوان خادم JASSIM AI بعد. افتح ⚙ أعلى الصفحة وأدخل رابط بوابتك الخاصة لتفعيل الردود الحقيقية.");return}setBusy(true);const waiting=addMessage("assistant","جارٍ التفكير…");waiting.querySelector(".bubble p").classList.add("typing");try{const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),300000);let response;try{response=await fetch(base+"/api/ai/generate",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:text,conversation_id:conversationId}),signal:controller.signal})}finally{clearTimeout(timer)}const data=await response.json().catch(()=>({}));if(!response.ok)throw Error(data.detail||"تعذر الاتصال بالخادم ("+response.status+")");const answer=typeof data.answer==="string"?data.answer:typeof data.reply==="string"?data.reply:"وصل رد غير مفهوم من الخادم";waiting.remove();const sceneData=extractScene(answer);if(sceneData){try{createObjects(sceneData);addMessage("assistant","أنشأت معاينة أولية من وصفك. يمكنك متابعة المحادثة لطلب التعديلات.");}catch(err){addMessage("assistant","وصلتني استجابة، لكن تعذر تحويلها إلى معاينة: "+err.message+"\n\n"+answer)}}else addMessage("assistant",answer);if(data.conversation_id)conversationId=data.conversation_id;gatewayVerified=true}catch(error){gatewayVerified=false;addMessage("assistant",error.name==="AbortError"?"استغرق الاتصال وقتاً أطول من المتوقع. حاول مرة أخرى.":"تعذر الحصول على رد: "+error.message)}finally{waiting.remove?.();setBusy(false);$("prompt").focus()}}
+async function sendMessage(message){const text=message.trim();if(!text)return;addMessage("user",text);$("prompt").value="";$("prompt").style.height="auto";const base=gateway.value.trim().replace(/\/+$/,"");if(!base){addMessage("assistant","واجهة المحادثة جاهزة، لكن لم يتم إعداد عنوان خادم JASSIM AI بعد. افتح ⚙ أعلى الصفحة وأدخل رابط بوابتك الخاصة لتفعيل الردود الحقيقية.");return}setBusy(true);const waiting=addMessage("assistant","جارٍ التفكير…");waiting.querySelector(".bubble p").classList.add("typing");try{const controller=new AbortController();const timer=setTimeout(()=>controller.abort(),300000);let response;try{response=await fetch(base+"/api/ai/generate",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({message:text,conversation_id:conversationId}),signal:controller.signal})}finally{clearTimeout(timer)}const data=await response.json().catch(()=>({}));if(!response.ok)throw Error(data.detail||"تعذر الاتصال بالخادم ("+response.status+")");const answer=typeof data.answer==="string"?data.answer:typeof data.reply==="string"?data.reply:"وصل رد غير مفهوم من الخادم";waiting.remove();const sceneData=extractScene(answer);if(sceneData){try{createObjects(sceneData);addMessage("assistant","أنشأت معاينة أولية من وصفك. يمكنك متابعة المحادثة لطلب التعديلات.");}catch(err){addMessage("assistant","وصلتني استجابة، لكن تعذر تحويلها إلى معاينة: "+err.message+"\n\n"+answer)}}else addMessage("assistant",answer);if(data.conversation_id)conversationId=data.conversation_id;gatewayReady=true;gatewayVerified=true}catch(error){gatewayVerified=false;addMessage("assistant",error.name==="AbortError"?"استغرق الاتصال وقتاً أطول من المتوقع. حاول مرة أخرى.":"تعذر الحصول على رد: "+error.message)}finally{waiting.remove?.();setBusy(false);$("prompt").focus()}}
 $("chatForm").addEventListener("submit",e=>{e.preventDefault();sendMessage($("prompt").value)});
 $("prompt").addEventListener("input",()=>{$("prompt").style.height="auto";$("prompt").style.height=Math.min($("prompt").scrollHeight,120)+"px"});
 $("prompt").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();$("chatForm").requestSubmit()}});
