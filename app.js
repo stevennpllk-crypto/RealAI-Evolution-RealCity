@@ -48,7 +48,7 @@ async function verifyGateway(base){
   try{
     const response=await fetch(base+"/health",{method:"GET",cache:"no-store",signal:controller.signal});
     const data=await response.json().catch(()=>({}));
-    gatewayVerified=response.ok&&data.status==="ok";
+    gatewayVerified=response.ok&&data.status==="ok"&&data.upstream_configured===true;
     $("connectionStatus").textContent=gatewayVerified?"الخادم يستجيب": "تعذر التحقق من الخادم";
     return gatewayVerified;
   }catch{
