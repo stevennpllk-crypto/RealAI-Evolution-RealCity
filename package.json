@@ -4,6 +4,6 @@
   "version": "0.2.2",
   "type": "module",
   "scripts": {
-    "check": "node --check app.js && node tests/check_frontend.mjs"
+    "check": "node --check app.js && node --check scene.js && node tests/check_frontend.mjs && node tests/test_scene.mjs"
   }
 }
