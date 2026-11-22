@@ -1,28 +1,18 @@
-# JASSIM GAME & APP BUILDER
+# JASSIM AI Studio
 
-Arabic-first experimental browser editor for app/site concepts and interactive 3D scene prototypes.
+واجهة عربية مبسطة تجمع محادثة JASSIM AI ومعاينة بناء ثلاثية الأبعاد بجانبها.
 
-## Current editor features
-- Editable project name, automatic local saving after scene changes, and project name preservation in JSON export/import. Automatic saves remain on the current browser/device.
-- Undo/redo controls and Ctrl+Z / Ctrl+Y shortcuts. History snapshots preserve imported GLB object geometry and materials in memory; history is limited to 40 states and is not persisted after a page reload.
-- Keyboard shortcuts: W (move), E (rotate), R (scale), Ctrl+D (duplicate), Ctrl+Z (undo), Ctrl+Y (redo), Delete (remove), and Escape (clear selection). Shortcuts are ignored while typing in form fields.
-- In-memory undo/redo history (up to 40 checkpoints) deep-clones mesh geometry and materials, including imported GLB groups, and batches templates/project loads into one action. History is session-only and is not persisted across reloads.
-- Three.js 3D viewport with orbit, zoom, and selection.
-- Starter scenes: island, city, forest, snow.
-- Scene objects: boxes, spheres, trees, grouped buildings, roads, procedural terrain patches, and water surfaces.
-- Road-grid generation, editable curved road paths, and interactive terrain sculpting with raise/lower modes and adjustable brush radius/strength.
-- Configurable multi-storey buildings (1–12 floors) with facade window details; floor count and curved-road control points survive JSON export/import.
-- Sculpted terrain vertex heights are preserved in local saves and JSON scene exports, and restored on import.
-- Startup restores the last saved project instead of immediately replacing it with the starter island.
-- Rename, move, scale, recolor, duplicate, and delete scene objects.
-- Local project save, JSON import, and JSON export. Project data preserves supported object types and transforms.
-- Binary GLB export of the current scene objects for use in compatible 3D tools; the exporter is loaded on demand from jsDelivr.
-- Import of binary `.glb` assets (up to 50 MB) as selectable scene groups using Three.js GLTFLoader. External `.gltf` files and their sidecar assets are not yet supported.
-- Optional connection to a self-hosted JASSIM AI chat API through the private FastAPI gateway.
-- AI scene responses are parsed as JSON and validated before supported objects are created.
+## الواجهة الحالية
+- محادثة لإرسال وصف البناء إلى بوابة JASSIM الخاصة.
+- معاينة Three.js مع تدوير وتقريب العرض.
+- إنشاء عناصر المعاينة عند استلام JSON صالح من رد النموذج.
+- إعداد رابط البوابة وحفظه محلياً على الجهاز.
+- فحص `GET /health` عند حفظ الرابط؛ لا تعرض الواجهة حالة «الخادم يستجيب» لمجرد حفظ العنوان.
+- حالات اتصال تميّز بين الإعداد والتحقق الفعلي.
+- تخطيط متجاوب: الدردشة والمعاينة جنباً إلى جنب على الشاشات الواسعة، ومتراصتان على الهاتف.
 
-## Run
-Serve the repository root with `python -m http.server 8000` and open `http://localhost:8000`. The Three.js module is loaded from jsDelivr, so internet access is required.
+## تشغيل الواجهة
+شغّل خادم ملفات ثابتة من جذر المستودع وافتح الصفحة. تعتمد مكتبة Three.js على jsDelivr، لذا يلزم اتصال إنترنت لتحميلها.
 
 ## Connect your private JASSIM AI server
 1. Run the gateway in `backend/` on a server you control.
@@ -41,3 +31,4 @@ See [backend/README.md](backend/README.md) for security notes and API contract.
 - Automatic local persistence stores supported JSON scene data in browser localStorage. Projects containing imported GLB assets cannot be fully auto-saved as JSON; export the scene as GLB to preserve those assets.
 
 This is an early 3D editor prototype, not an AAA engine. AI scene generation depends on a reachable, correctly configured JASSIM server returning the requested JSON structure. Supported AI-generated primitives and grouped objects are assembled by the browser editor; the model does not generate arbitrary mesh topology or textures. GLB export packages the current supported scene objects as a binary glTF asset; GLB import loads a binary asset into the current scene. These flows have not yet been validated in a live browser session. Imported GLB geometry is preserved in GLB export, but is not represented in the editable JSON scene format. APK/Android packaging, PSP/PPSSPP builds, full game runtime, asset pipeline, and a verified live JASSIM inference session are not implemented or verified.
+
