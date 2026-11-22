@@ -26,8 +26,8 @@ assert.match(app, /conversation_id:conversationId/, "chat must preserve conversa
 assert.match(app, /function addMessage\(role,text\)/, "chat messages must be rendered");
 assert.match(app, /localStorage\.setItem\("jassimGatewayUrl"/, "gateway URL must be saved locally");
 assert.match(app, /AbortController/, "chat requests must have a timeout");
-assert.match(app, /async function verifyGateway\\(base\\)/, "gateway health must be checked explicitly");
-assert.match(app, /fetch\\(base\\+"\\/health"/, "connection status must use the gateway health endpoint");
+assert.ok(app.includes("async function verifyGateway(base)"), "gateway health must be checked explicitly");
+assert.ok(app.includes('fetch(base+"/health"'), "connection status must use the gateway health endpoint");
 assert.match(app, /عنوان محفوظ، لم يتم التحقق/, "configured URL must not be reported as a live connection");
 assert.doesNotMatch(app, /متصل بعنوان خادم/, "UI must not claim connection merely because a URL is saved");
 assert.match(app, /data-prompt/, "quick prompt suggestions must be wired");
