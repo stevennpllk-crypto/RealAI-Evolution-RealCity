@@ -233,7 +233,7 @@ async function sendMessage(message) {
     const data = await response.json().catch(() => ({}));
     if (!response.ok) {
       if (response.status === 401) sessionStorage.removeItem("jassimSessionToken");
-      throw new Error(data.detail || data.error || "تعذر الاتصال بالخادم (" + response.status + ")");
+      throw new Error(data.message || data.detail || data.error || "تعذر الاتصال بالخادم (" + response.status + ")");
     }
     const answer = typeof data.answer === "string" ? data.answer : typeof data.reply === "string" ? data.reply : typeof data.message === "string" ? data.message : typeof data.content === "string" ? data.content : data.scene || data.objects ? JSON.stringify(data.scene || { objects: data.objects }) : "";
     if (!answer.trim()) throw new Error("استجابة الخادم لا تحتوي على نص جواب صالح");
