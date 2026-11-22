@@ -5,7 +5,7 @@ const html = readFileSync(new URL("../index.html", import.meta.url), "utf8");
 const app = readFileSync(new URL("../app.js", import.meta.url), "utf8");
 
 assert.match(html, /id="exportGLBBtn"/, "GLB export button must exist");
-assert.match(html, /<i>0\.7<\/i>/, "editor version label must be current");
+assert.match(html, /<i>0\.8<\/i>/, "editor version label must be current");
 assert.match(app, /async function exportGLB\(\)/, "GLB export handler must exist");
 assert.match(html, /id="importGLBBtn"/, "GLB import button must exist");
 assert.match(app, /async function importGLBFile\(file\)/, "GLB import handler must exist");
@@ -32,3 +32,9 @@ assert.match(app, /transformControls\.detach\(\)/, "gizmo must detach when selec
 assert.match(app, /transformControls\.setMode\(mode\)/, "toolbar must switch gizmo modes");
 assert.match(app, /if\(gizmoUsed\)/, "gizmo drags must not trigger scene selection");
 console.log("Frontend structure, GLB import/export, group inspector, and transform gizmo checks passed.");
+
+assert.match(app, /Keyboard shortcuts: W = move, E = rotate, R = scale/, "keyboard shortcut handler must be documented");
+assert.match(app, /event\.key\.toLowerCase\(\)==="d"/, "Ctrl+D duplicate shortcut must exist");
+assert.match(app, /event\.key==="Delete"/, "Delete shortcut must exist");
+assert.match(app, /event\.key==="Escape"/, "Escape selection shortcut must exist");
+assert.match(app, /isContentEditable\|\//, "keyboard shortcuts must not intercept text entry");
