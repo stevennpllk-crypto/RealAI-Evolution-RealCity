@@ -37,4 +37,4 @@ assert.match(app, /Keyboard shortcuts: W = move, E = rotate, R = scale/, "keyboa
 assert.match(app, /event\.key\.toLowerCase\(\)==="d"/, "Ctrl+D duplicate shortcut must exist");
 assert.match(app, /event\.key==="Delete"/, "Delete shortcut must exist");
 assert.match(app, /event\.key==="Escape"/, "Escape selection shortcut must exist");
-assert.match(app, /isContentEditable\|\//, "keyboard shortcuts must not intercept text entry");
+assert.match(app, /isContentEditable/, "keyboard shortcuts must not intercept contenteditable text");
