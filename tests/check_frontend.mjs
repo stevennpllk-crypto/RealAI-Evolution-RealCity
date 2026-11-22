@@ -35,11 +35,12 @@ assert.match(app, /const fallbackScene = buildLocalDemoScene\(text\)/, "a local 
 assert.match(app, /لم يُرجع النموذج بيانات مشهد/, "local fallback previews must be labeled honestly");
 assert.match(app, /normalizeSceneObjects/, "scene objects must be validated before rendering");
 assert.match(app, /gatewayMode === "gateway" \? "\/api\/ai\/generate" : "\/api\/chat"/, "chat must select the documented gateway endpoint or legacy authenticated endpoint");
+assert.match(app, /data\.message \|\| data\.detail \|\| data\.error/, "model-unavailable responses must show the server explanation");
 assert.match(app, /"Authorization":\s*"Bearer "\s*\+\s*token/, "legacy chat must use the authenticated JASSIM session");
 assert.match(app, /gatewayMode === "gateway"\s*\?\s*\{\s*"Content-Type": "application\/json"\s*\}/, "private gateway calls must not expose or require a browser-side API token");
 assert.match(app, /fetch\(base\s*\+\s*"\/api\/auth\/login"/, "login must authenticate against JASSIM directly");
 assert.doesNotMatch(app, /\.open\s*=\s*false/, "login must not mutate a possibly missing settings details element");
-assert.match(html, /app\.js\?v=login-fix-2/, "login fix must use a cache-busted frontend module URL");
+assert.match(html, /app\.js\?v=api-error-3/, "API error fix must use a cache-busted frontend module URL");
 assert.match(app, /sessionStorage\.setItem\("jassimSessionToken"/, "session token must stay in tab-scoped storage");
 assert.match(app, /DEFAULT_JASSIM_SERVER\s*=\s*"https:\/\/jassim-ai-core-final-production\.up\.railway\.app"/, "the Railway JASSIM host must be preconfigured");
 assert.match(app, /conversation_id:\s*conversationId/, "chat must preserve conversation context");
