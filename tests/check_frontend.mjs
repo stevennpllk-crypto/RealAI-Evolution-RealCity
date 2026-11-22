@@ -33,6 +33,8 @@ assert.ok(app.includes('data.upstream_configured===true'), "health must confirm 
 assert.match(app, /let gatewayReady=false/, "gateway liveness must be tracked separately from a successful model reply");
 assert.match(app, /البوابة تستجيب؛ رد النموذج لم يُختبر/, "health must not be presented as proof that model inference works");
 assert.match(app, /تم اختبار رد JASSIM بنجاح/, "only a successful generate response may mark JASSIM as verified");
+assert.match(app, /if\(!answer\.trim\(\)\)throw Error\("استجابة الخادم لا تحتوي على نص جواب صالح"\)/, "empty upstream responses must not count as successful inference");
+
 
 assert.match(app, /عنوان محفوظ، لم يتم التحقق/, "configured URL must not be reported as a live connection");
 assert.doesNotMatch(app, /متصل بعنوان خادم/, "UI must not claim connection merely because a URL is saved");
