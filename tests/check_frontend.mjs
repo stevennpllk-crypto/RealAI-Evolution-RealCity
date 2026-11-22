@@ -34,8 +34,9 @@ assert.match(app, /أنشئ من 8 إلى 24 عنصراً/, "scene requests must
 assert.match(app, /const fallbackScene = buildLocalDemoScene\(text\)/, "a local demo preview must prevent a blank viewport when the model returns prose only");
 assert.match(app, /لم يُرجع النموذج بيانات مشهد/, "local fallback previews must be labeled honestly");
 assert.match(app, /normalizeSceneObjects/, "scene objects must be validated before rendering");
-assert.match(app, /fetch\(base\s*\+\s*"\/api\/chat"/, "chat must call the private JASSIM server directly");
-assert.match(app, /"Authorization":\s*"Bearer "\s*\+\s*token/, "chat must use the authenticated JASSIM session");
+assert.match(app, /gatewayMode === "gateway" \? "\/api\/ai\/generate" : "\/api\/chat"/, "chat must select the documented gateway endpoint or legacy authenticated endpoint");
+assert.match(app, /"Authorization":\s*"Bearer "\s*\+\s*token/, "legacy chat must use the authenticated JASSIM session");
+assert.match(app, /gatewayMode === "gateway"\s*\?\s*\{\s*"Content-Type": "application\/json"\s*\}/, "private gateway calls must not expose or require a browser-side API token");
 assert.match(app, /fetch\(base\s*\+\s*"\/api\/auth\/login"/, "login must authenticate against JASSIM directly");
 assert.doesNotMatch(app, /\.open\s*=\s*false/, "login must not mutate a possibly missing settings details element");
 assert.match(html, /app\.js\?v=login-fix-2/, "login fix must use a cache-busted frontend module URL");
@@ -47,7 +48,9 @@ assert.match(app, /localStorage\.setItem\("jassimGatewayUrl"/, "JASSIM server UR
 assert.match(app, /AbortController/, "chat requests must have a timeout");
 assert.ok(app.includes("async function verifyGateway(base)"), "server health must be checked explicitly");
 assert.match(app, /fetch\(base\s*\+\s*"\/health"/, "connection status must use JASSIM health endpoint");
-assert.match(app, /data\.ok\s*===\s*true\s*&&\s*data\.service\s*===\s*"JASSIM AI"/, "health must identify the actual JASSIM server");
+assert.match(app, /data\.ok\s*===\s*true\s*&&\s*data\.service\s*===\s*"JASSIM AI"/, "legacy health must identify the actual JASSIM server");
+assert.match(app, /data\.status\s*===\s*"ok"\s*&&\s*data\.upstream_configured\s*===\s*true/, "gateway health must match the documented backend response");
+assert.match(app, /gatewayMode = gatewayHealth \? "gateway" : "legacy"/, "frontend must detect the private gateway mode");
 assert.match(app, /let gatewayReady\s*=\s*false/, "server liveness must be tracked separately from successful inference");
 assert.match(app, /الخادم متاح؛ سجّل الدخول لتفعيل المحادثة/, "health must not be presented as proof that model inference works");
 assert.match(app, /تم اختبار رد JASSIM بنجاح/, "only a successful chat response may mark JASSIM as verified");
