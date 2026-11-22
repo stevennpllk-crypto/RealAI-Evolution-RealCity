@@ -3,6 +3,7 @@
 Arabic-first experimental browser editor for app/site concepts and interactive 3D scene prototypes.
 
 ## Current editor features
+- Editable project name, automatic local saving after scene changes, and project name preservation in JSON export/import. Automatic saves remain on the current browser/device.
 - Undo/redo controls and Ctrl+Z / Ctrl+Y shortcuts. History snapshots preserve imported GLB object geometry and materials in memory; history is limited to 40 states and is not persisted after a page reload.
 - Keyboard shortcuts: W (move), E (rotate), R (scale), Ctrl+D (duplicate), Ctrl+Z (undo), Ctrl+Y (redo), Delete (remove), and Escape (clear selection). Shortcuts are ignored while typing in form fields.
 - In-memory undo/redo history (up to 40 checkpoints) deep-clones mesh geometry and materials, including imported GLB groups, and batches templates/project loads into one action. History is session-only and is not persisted across reloads.
@@ -37,4 +38,6 @@ See [backend/README.md](backend/README.md) for security notes and API contract.
 - GitHub Actions is configured to run both on pushes and pull requests to `main`.
 
 ## Honest scope and limitations
+- Automatic local persistence stores supported JSON scene data in browser localStorage. Projects containing imported GLB assets cannot be fully auto-saved as JSON; export the scene as GLB to preserve those assets.
+
 This is an early 3D editor prototype, not an AAA engine. AI scene generation depends on a reachable, correctly configured JASSIM server returning the requested JSON structure. Supported AI-generated primitives and grouped objects are assembled by the browser editor; the model does not generate arbitrary mesh topology or textures. GLB export packages the current supported scene objects as a binary glTF asset; GLB import loads a binary asset into the current scene. These flows have not yet been validated in a live browser session. Imported GLB geometry is preserved in GLB export, but is not represented in the editable JSON scene format. APK/Android packaging, PSP/PPSSPP builds, full game runtime, asset pipeline, and a verified live JASSIM inference session are not implemented or verified.
