@@ -189,11 +189,16 @@ async function sendMessage(message) {
   try {
     const controller = new AbortController(), timer = setTimeout(() => controller.abort(), 300000);
     let response;
+    const buildIntent = /(?:أنشئ|انشئ|ابنِ|ابني|ابن|اصنع|صمّم|صمم|بناء|ابنِ لي|أريد بناء|اريد بناء|create|build|design|make) /i.test(text + " ");
+    const sceneDirective = buildIntent
+      ? "أنت الآن محرك إنشاء مشاهد ثلاثية الأبعاد داخل JASSIM BUILD STUDIO. نفّذ طلب المستخدم بصرياً. أعد JSON صالحاً فقط دون شرح أو Markdown، بالشكل التالي: {\\"objects\\":[{\\"kind\\":\\"tree|building|sphere|road|water|box\\",\\"position\\":[x,0,z],\\"scale\\":1,\\"floors\\":2,\\"color\\":\\"#RRGGBB\\",\\"name\\":\\"اسم العنصر\\"}]}. أنشئ من 8 إلى 24 عنصراً مناسبة للوصف، وزّعها مكانياً، واجعل الماء والشاطئ والأشجار عناصر منفصلة عند طلب جزيرة. لا تكتب أي نص خارج JSON. طلب المستخدم: "
+      : "";
+    const modelMessage = sceneDirective + text;
     try {
       response = await fetch(base + "/api/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
-        body: JSON.stringify({ message: text, conversation_id: conversationId }),
+        body: JSON.stringify({ message: modelMessage, conversation_id: conversationId }),
         signal: controller.signal, cache: "no-store"
       });
     } finally { clearTimeout(timer); }
@@ -207,9 +212,20 @@ async function sendMessage(message) {
     waiting.remove();
     const sceneData = extractSceneResponse(answer);
     if (sceneData) {
-      try { createObjects(sceneData); addMessage("assistant", "أنشأت معاينة من استجابة JASSIM. يمكنك متابعة المحادثة لطلب التعديلات."); }
-      catch (err) { addMessage("assistant", "وصلتني استجابة، لكن تعذر تحويلها إلى معاينة: " + err.message + "\n\n" + answer); }
-    } else addMessage("assistant", answer);
+      try {
+        createObjects(sceneData);
+        addMessage("assistant", "أنشأت معاينة ثلاثية الأبعاد من بيانات المشهد التي أعادها JASSIM. يمكنك طلب التعديلات.");
+      } catch (err) {
+        addMessage("assistant", "وصل رد JASSIM لكن تعذر عرض المشهد: " + err.message + "\n\n" + answer);
+      }
+    } else {
+      const fallbackScene = buildLocalDemoScene(text);
+      if (fallbackScene) {
+        createObjects(fallbackScene);
+        $("previewStatus").textContent = "معاينة محلية مساعدة · لم يُرجع النموذج بيانات مشهد";
+        addMessage("assistant", answer + "\n\nأنشأت لك معاينة محلية مساعدة لأن رد النموذج لم يتضمن بيانات مشهد ثلاثي الأبعاد. هذه المعاينة ليست توليداً من النموذج.");
+      } else addMessage("assistant", answer);
+    }
     if (data.conversation_id) conversationId = data.conversation_id;
     gatewayReady = true; gatewayVerified = true;
   } catch (error) {
