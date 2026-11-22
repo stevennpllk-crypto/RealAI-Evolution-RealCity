@@ -6,7 +6,8 @@ Arabic-first experimental browser editor for app/site concepts and interactive 3
 - Three.js 3D viewport with orbit, zoom, and selection.
 - Starter scenes: island, city, forest, snow.
 - Scene objects: boxes, spheres, trees, grouped buildings, roads, procedural terrain patches, and water surfaces.
-- Road-grid generation and interactive terrain sculpting with raise/lower modes and adjustable brush radius/strength.
+- Road-grid generation, editable curved road paths, and interactive terrain sculpting with raise/lower modes and adjustable brush radius/strength.
+- Configurable multi-storey buildings (1–12 floors) with facade window details; floor count and curved-road control points survive JSON export/import.
 - Sculpted terrain vertex heights are preserved in local saves and JSON scene exports, and restored on import.
 - Startup restores the last saved project instead of immediately replacing it with the starter island.
 - Rename, move, scale, recolor, duplicate, and delete scene objects.
