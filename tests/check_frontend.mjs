@@ -5,7 +5,7 @@ const html = readFileSync(new URL("../index.html", import.meta.url), "utf8");
 const app = readFileSync(new URL("../app.js", import.meta.url), "utf8");
 
 assert.match(html, /id="exportGLBBtn"/, "GLB export button must exist");
-assert.match(html, /<i>0\.8<\/i>/, "editor version label must be current");
+assert.match(html, /<i>0\.9<\/i>/, "editor version label must be current");
 assert.match(app, /async function exportGLB\(\)/, "GLB export handler must exist");
 assert.match(html, /id="importGLBBtn"/, "GLB import button must exist");
 assert.match(app, /async function importGLBFile\(file\)/, "GLB import handler must exist");
@@ -38,3 +38,16 @@ assert.match(app, /event\.key\.toLowerCase\(\)==="d"/, "Ctrl+D duplicate shortcu
 assert.match(app, /event\.key==="Delete"/, "Delete shortcut must exist");
 assert.match(app, /event\.key==="Escape"/, "Escape selection shortcut must exist");
 assert.match(app, /isContentEditable/, "keyboard shortcuts must not intercept contenteditable text");
+
+assert.match(html, /id="undoBtn"/, "undo control must exist");
+assert.match(html, /id="redoBtn"/, "redo control must exist");
+assert.match(app, /function cloneForHistory\(object\)/, "history snapshots must deep-clone object geometry and materials");
+assert.match(app, /function recordHistory\(\)/, "history checkpoint function must exist");
+assert.match(app, /function restoreHistory\(nextIndex\)/, "history restore function must exist");
+assert.match(app, /function undo\(\)/, "undo action must exist");
+assert.match(app, /function redo\(\)/, "redo action must exist");
+assert.match(app, /event\.key\.toLowerCase\(\)==="z"/, "Ctrl+Z shortcut must exist");
+assert.match(app, /event\.key\.toLowerCase\(\)==="y"/, "Ctrl+Y shortcut must exist");
+assert.match(app, /historyBatch\(\(\)=>buildTemplate\(t\)\)/, "template generation must be a single history action");
+assert.match(app, /historyBatch\(\(\)=>loadData\(d\)\)/, "project loading must be a single history action");
+assert.match(app, /history\.length>40/, "history must have a bounded memory footprint");
