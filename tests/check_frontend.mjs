@@ -24,6 +24,10 @@ assert.doesNotMatch(html, /TransformControls|buildingFloors|sculptBtn/, "advance
 
 assert.match(app, /new THREE\.WebGLRenderer/, "Three.js preview renderer must be initialized");
 assert.match(app, /function createObjects\(list\)/, "scene response must create preview objects");
+assert.match(app, /function addPalm\(x, z, color/, "Three.js renderer must create tropical palm trees");
+assert.match(app, /kind === "island"/, "Three.js renderer must create raised island terrain");
+assert.match(app, /kind === "rock"/, "Three.js renderer must create decorative rocks");
+assert.match(app, /tree\\\|palm\\\|island\\\|rock/, "scene generation prompt must advertise tropical scene object types");
 assert.match(app, /extractSceneResponse/, "AI scene JSON must use the tested scene parser");
 assert.match(app, /محرك إنشاء مشاهد ثلاثية الأبعاد/, "build requests must explicitly ask JASSIM for structured 3D scene output");
 assert.match(app, /أنشئ من 8 إلى 24 عنصراً/, "scene requests must ask for a useful multi-object scene");
@@ -57,7 +61,9 @@ assert.match(css, /@media\(max-width:760px\)/, "mobile layout must be responsive
 const islandDemo = buildLocalDemoScene("أنشئ جزيرة استوائية فيها أشجار وبحيرة");
 assert.ok(Array.isArray(islandDemo) && islandDemo.length >= 6, "island prompt must produce a non-empty local preview");
 assert.ok(islandDemo.some(item => item.kind === "water"), "island preview must include water");
-assert.ok(islandDemo.some(item => item.kind === "tree"), "island preview must include trees");
+assert.ok(islandDemo.some(item => item.kind === "palm"), "island preview must include tropical palms");
+assert.ok(islandDemo.some(item => item.kind === "island"), "island preview must include a raised island landform");
+assert.ok(islandDemo.some(item => item.kind === "rock"), "island preview must include decorative rocks");
 assert.equal(buildLocalDemoScene("اشرح لي قانون نيوتن"), null, "unrelated chat prompts must not create a demo scene");
 
 const parsedScene = extractSceneResponse(JSON.stringify({objects:[
