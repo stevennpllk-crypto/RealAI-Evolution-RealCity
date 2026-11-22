@@ -74,9 +74,9 @@ assert.equal(parsedScene.length, 2, "valid model scene JSON must be parsed and n
 assert.equal(extractSceneResponse("هذا شرح نصي فقط ولا يحتوي على مشهد"), null, "plain prose must not be mistaken for scene JSON");
 
 
-const wrappedScene = extractSceneResponse("نتيجة النموذج: \`\`\`json\\n" + JSON.stringify({data:{scene:{objects:[
+const wrappedScene = extractSceneResponse("نتيجة النموذج: ```json\n" + JSON.stringify({data:{scene:{objects:[
   {kind:"palm",position:[1,0,2],scale:1,color:"#239b69",name:"نخلة"}
-]}}}) + "\\n\`\`\`");
+]}}}) + "\n```");
 assert.equal(wrappedScene.length, 1, "fenced nested scene payloads must be parsed");
 assert.equal(wrappedScene[0].kind, "palm", "nested scene parsing must preserve object kinds");
 
@@ -86,7 +86,7 @@ const prefixedScene = extractSceneResponse("تم إنشاء المشهد: " + JS
 assert.equal(prefixedScene.length, 1, "JSON surrounded by explanatory prose must be extracted");
 
 const escapedScene = extractSceneResponse(JSON.stringify({objects:[
-  {kind:"box",position:[0,0,0],color:"#5688d8",name:"مبنى {قديم} \\"مميز\\""}
+  {kind:"box",position:[0,0,0],color:"#5688d8",name:'مبنى {قديم} "مميز"'}
 ]}));
 assert.equal(escapedScene.length, 1, "braces and escaped quotes inside strings must not break JSON extraction");
 
