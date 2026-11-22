@@ -2,3 +2,5 @@
 .toolbar-tools{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end}.toolbar-tools .tool-mode.active{background:#31558f;border-color:#83aaff;box-shadow:inset 0 0 0 1px #83aaff}.toolbar-tools button:disabled{opacity:.45;cursor:not-allowed}@media(max-width:900px){.toolbar{height:auto;min-height:58px;align-items:flex-start;gap:8px;flex-wrap:wrap}.toolbar-tools{justify-content:flex-start}}
 
 .shortcut-hint{font-size:10px;color:#91a5ca;padding:0 5px;white-space:nowrap}@media(max-width:650px){.shortcut-hint{display:none}}
+
+#undoBtn:disabled,#redoBtn:disabled{opacity:.4;cursor:not-allowed}
