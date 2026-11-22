@@ -46,7 +46,7 @@ export function extractSceneResponse(answer) {
       const ch = source[i];
       if (quoted) {
         if (escaped) escaped = false;
-        else if (ch === "\\\\") escaped = true;
+        else if (ch === "\\") escaped = true;
         else if (ch === '"') quoted = false;
         continue;
       }
