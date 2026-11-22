@@ -12,6 +12,7 @@ Arabic-first experimental browser editor for app/site concepts and interactive 3
 - Startup restores the last saved project instead of immediately replacing it with the starter island.
 - Rename, move, scale, recolor, duplicate, and delete scene objects.
 - Local project save, JSON import, and JSON export. Project data preserves supported object types and transforms.
+- Binary GLB export of the current scene objects for use in compatible 3D tools; the exporter is loaded on demand from jsDelivr.
 - Optional connection to a self-hosted JASSIM AI chat API through the private FastAPI gateway.
 - AI scene responses are parsed as JSON and validated before supported objects are created.
 
@@ -32,4 +33,4 @@ See [backend/README.md](backend/README.md) for security notes and API contract.
 - GitHub Actions is configured to run both on pushes and pull requests to `main`.
 
 ## Honest scope and limitations
-This is an early 3D editor prototype, not an AAA engine. AI scene generation depends on a reachable, correctly configured JASSIM server returning the requested JSON structure. Supported AI-generated primitives and grouped objects are assembled by the browser editor; the model does not generate arbitrary mesh topology or textures. JSON export is scene data only. APK/Android packaging, PSP/PPSSPP builds, full game runtime, asset pipeline, and a verified live JASSIM inference session are not implemented or verified.
+This is an early 3D editor prototype, not an AAA engine. AI scene generation depends on a reachable, correctly configured JASSIM server returning the requested JSON structure. Supported AI-generated primitives and grouped objects are assembled by the browser editor; the model does not generate arbitrary mesh topology or textures. GLB export packages the current supported scene objects as a binary glTF asset; this has not yet been validated in a live browser session. APK/Android packaging, PSP/PPSSPP builds, full game runtime, asset pipeline, and a verified live JASSIM inference session are not implemented or verified.
