@@ -25,24 +25,22 @@ assert.match(app, /new THREE\.WebGLRenderer/, "Three.js preview renderer must be
 assert.match(app, /function createObjects\(list\)/, "scene response must create preview objects");
 assert.match(app, /extractSceneResponse/, "AI scene JSON must use the tested scene parser");
 assert.match(app, /normalizeSceneObjects/, "scene objects must be validated before rendering");
-assert.match(app, /fetch\(base\+"\/api\/chat"/, "chat must call the private JASSIM server directly");
-assert.match(app, /Authorization":"Bearer "\+token/, "chat must use the authenticated JASSIM session");
-assert.match(app, /fetch\(base\+"\/api\/auth\/login"/, "login must authenticate against JASSIM directly");
+assert.match(app, /fetch\(base\s*\+\s*"\/api\/chat"/, "chat must call the private JASSIM server directly");
+assert.match(app, /Authorization:\s*"Bearer "\s*\+\s*token/, "chat must use the authenticated JASSIM session");
+assert.match(app, /fetch\(base\s*\+\s*"\/api\/auth\/login"/, "login must authenticate against JASSIM directly");
 assert.match(app, /sessionStorage\.setItem\("jassimSessionToken"/, "session token must stay in tab-scoped storage");
-assert.match(app, /DEFAULT_JASSIM_SERVER="https:\/\/jassim-ai-core-final-production\.up\.railway\.app"/, "the verified Railway JASSIM host must be preconfigured");
-assert.match(app, /conversation_id:conversationId/, "chat must preserve conversation context");
-assert.match(app, /function addMessage\(role,text\)/, "chat messages must be rendered");
+assert.match(app, /DEFAULT_JASSIM_SERVER\s*=\s*"https:\/\/jassim-ai-core-final-production\.up\.railway\.app"/, "the Railway JASSIM host must be preconfigured");
+assert.match(app, /conversation_id:\s*conversationId/, "chat must preserve conversation context");
+assert.match(app, /function addMessage\(role,\s*text\)/, "chat messages must be rendered");
 assert.match(app, /localStorage\.setItem\("jassimGatewayUrl"/, "JASSIM server URL must be saved locally");
 assert.match(app, /AbortController/, "chat requests must have a timeout");
-assert.ok(app.includes("async function verifyGateway(base)"), "gateway health must be checked explicitly");
-assert.ok(app.includes('fetch(base+"/health"'), "connection status must use the gateway health endpoint");
-assert.ok(app.includes('data.ok===true&&data.service==="JASSIM AI"'), "health must identify the actual JASSIM server");
-assert.match(app, /let gatewayReady=false/, "gateway liveness must be tracked separately from a successful model reply");
+assert.ok(app.includes("async function verifyGateway(base)"), "server health must be checked explicitly");
+assert.match(app, /fetch\(base\s*\+\s*"\/health"/, "connection status must use JASSIM health endpoint");
+assert.match(app, /data\.ok\s*===\s*true\s*&&\s*data\.service\s*===\s*"JASSIM AI"/, "health must identify the actual JASSIM server");
+assert.match(app, /let gatewayReady\s*=\s*false/, "server liveness must be tracked separately from successful inference");
 assert.match(app, /الخادم متاح؛ رد النموذج لم يُختبر/, "health must not be presented as proof that model inference works");
-assert.match(app, /تم اختبار رد JASSIM بنجاح/, "only a successful generate response may mark JASSIM as verified");
-assert.match(app, /if\(!answer\.trim\(\)\)throw Error\("استجابة الخادم لا تحتوي على نص جواب صالح"\)/, "empty upstream responses must not count as successful inference");
-
-
+assert.match(app, /تم اختبار رد JASSIM بنجاح/, "only a successful chat response may mark JASSIM as verified");
+assert.match(app, /if\s*\(!answer\.trim\(\)\)\s*throw new Error\("استجابة الخادم لا تحتوي على نص جواب صالح"\)/, "empty upstream responses must not count as successful inference");
 assert.match(app, /عنوان محفوظ، لم يتم التحقق/, "configured URL must not be reported as a live connection");
 assert.doesNotMatch(app, /متصل بعنوان خادم/, "UI must not claim connection merely because a URL is saved");
 assert.match(app, /data-prompt/, "quick prompt suggestions must be wired");
