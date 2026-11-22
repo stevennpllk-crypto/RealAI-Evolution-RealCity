@@ -17,4 +17,8 @@ assert.match(app, /examples\/jsm\/exporters\/GLTFExporter\.js/, "GLTFExporter mu
 assert.match(app, /binary:true/, "GLB export must request binary glTF");
 assert.match(app, /model\/gltf-binary/, "GLB download must use the binary glTF MIME type");
 assert.match(app, /\$\("exportGLBBtn"\)\.onclick=exportGLB/, "GLB button must be wired");
-console.log("Frontend structure and GLB export checks passed.");
+
+assert.match(app, /function firstMaterialColor\(o\)/, "group inspector must find a nested mesh material");
+assert.match(app, /selected\.traverse\(apply\)/, "group color editing must include nested imported GLB meshes");
+assert.match(app, /mats\.forEach\(m=>m\.color\?\.set\(color\)\)/, "material arrays must be handled safely");
+console.log("Frontend structure, GLB import/export, and group inspector checks passed.");
