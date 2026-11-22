@@ -28,20 +28,60 @@ export function normalizeSceneObjects(input) {
 }
 
 export function extractSceneResponse(answer) {
-  if (typeof answer !== "string") return null;
+  if (typeof answer !== "string" || !answer.trim()) return null;
   const source = answer.trim();
-  const candidates = [source];
-  const fenced = source.match(/```(?:json)?\s*([\s\S]*?)\s*```/i);
-  if (fenced) candidates.unshift(fenced[1].trim());
-  const start = source.indexOf("{");
-  const end = source.lastIndexOf("}");
-  if (start >= 0 && end > start) candidates.push(source.slice(start, end + 1));
+  const candidates = [];
+  const add = value => {
+    if (typeof value === "string" && value.trim() && !candidates.includes(value.trim())) candidates.push(value.trim());
+  };
+  add(source);
+  for (const match of source.matchAll(/```(?:json)?\\s*([\\s\\S]*?)\\s*```/gi)) add(match[1]);
+
+  // Extract balanced JSON objects without being confused by braces inside quoted strings.
+  for (let start = 0; start < source.length; start++) {
+    if (source[start] !== "{" && source[start] !== "[") continue;
+    const opening = source[start], closing = opening === "{" ? "}" : "]";
+    let depth = 0, quoted = false, escaped = false;
+    for (let i = start; i < source.length; i++) {
+      const ch = source[i];
+      if (quoted) {
+        if (escaped) escaped = false;
+        else if (ch === "\\\\") escaped = true;
+        else if (ch === '"') quoted = false;
+        continue;
+      }
+      if (ch === '"') { quoted = true; continue; }
+      if (ch === opening) depth++;
+      else if (ch === closing && --depth === 0) {
+        add(source.slice(start, i + 1));
+        break;
+      }
+    }
+  }
+
+  const findObjects = (value, seen = new Set(), depth = 0) => {
+    if (!value || typeof value !== "object" || depth > 5 || seen.has(value)) return null;
+    seen.add(value);
+    if (Array.isArray(value)) {
+      if (value.length && value.every(item => item && typeof item === "object" && !Array.isArray(item) && "kind" in item)) return value;
+      for (const item of value) { const found = findObjects(item, seen, depth + 1); if (found) return found; }
+      return null;
+    }
+    if (Array.isArray(value.objects)) return value.objects;
+    for (const key of ["scene", "result", "data", "output", "content", "response"]) {
+      if (key in value) { const found = findObjects(value[key], seen, depth + 1); if (found) return found; }
+    }
+    return null;
+  };
+
   for (const candidate of candidates) {
     try {
       const parsed = JSON.parse(candidate);
-      const objects = Array.isArray(parsed) ? parsed : parsed && parsed.objects;
-      if (Array.isArray(objects)) return normalizeSceneObjects(objects);
-    } catch {}
+      const objects = findObjects(parsed);
+      if (objects) {
+        try { return normalizeSceneObjects(objects); } catch { /* Try another candidate before failing. */ }
+      }
+    } catch { /* Continue searching for a valid JSON payload. */ }
   }
   return null;
 }
