@@ -126,7 +126,7 @@ function addMessage(role, text) {
 const gateway = $("gatewayUrl");
 const DEFAULT_JASSIM_SERVER = "https://jassim-ai-core-final-production.up.railway.app";
 gateway.value = localStorage.getItem("jassimGatewayUrl") || DEFAULT_JASSIM_SERVER;
-let gatewayReady = false, gatewayVerified = false;
+let gatewayReady = false, gatewayVerified = false, gatewayMode = "legacy";
 function connectionLabel() {
   if (gatewayVerified) return "تم اختبار رد JASSIM بنجاح";
   if (gatewayReady) return "الخادم متاح؛ سجّل الدخول لتفعيل المحادثة";
@@ -140,8 +140,15 @@ async function verifyGateway(base) {
   try {
     const response = await fetch(base + "/health", { method: "GET", cache: "no-store", signal: controller.signal });
     const data = await response.json().catch(() => ({}));
-    gatewayReady = response.ok && data.ok === true && data.service === "JASSIM AI";
-    $("connectionStatus").textContent = gatewayReady ? "خادم JASSIM متاح؛ يلزم تسجيل الدخول" : "تعذر الوصول إلى خادم JASSIM";
+    const legacyHealth = data.ok === true && data.service === "JASSIM AI";
+    const gatewayHealth = data.status === "ok" && data.upstream_configured === true;
+    gatewayMode = gatewayHealth ? "gateway" : "legacy";
+    gatewayReady = response.ok && (legacyHealth || gatewayHealth);
+    const authFields = document.querySelector(".auth-fields");
+    if (authFields) authFields.hidden = gatewayMode === "gateway";
+    $("connectionStatus").textContent = gatewayReady
+      ? (gatewayMode === "gateway" ? "بوابة JASSIM جاهزة؛ مفتاح النموذج محفوظ على الخادم" : "خادم JASSIM متاح؛ سجّل الدخول لتفعيل المحادثة")
+      : (response.ok && data.status === "ok" ? "البوابة تعمل لكن الخادم upstream غير مضبوط" : "تعذر الوصول إلى خادم JASSIM");
     return gatewayReady;
   } catch {
     $("connectionStatus").textContent = "تعذر التحقق من خادم JASSIM"; return false;
@@ -153,6 +160,7 @@ if (sessionStorage.getItem("jassimSessionToken")) $("loginStatus").textContent =
 $("loginJassim").onclick = async () => {
   const base = gateway.value.trim().replace(/\/+$/, "");
   const email = $("accountEmail").value.trim(), password = $("accountPassword").value;
+  if (gatewayMode === "gateway") { $("loginStatus").textContent = "هذه البوابة تستخدم مفتاحاً محفوظاً على الخادم؛ لا يلزم تسجيل دخول من المتصفح."; return; }
   if (!base || !email || !password) { $("loginStatus").textContent = "أدخل البريد وكلمة المرور لحساب JASSIM."; return; }
   $("loginJassim").disabled = true; $("loginStatus").textContent = "جارٍ تسجيل الدخول إلى خادم JASSIM…";
   try {
@@ -200,7 +208,7 @@ async function sendMessage(message) {
     return;
   }
   const token = sessionStorage.getItem("jassimSessionToken");
-  if (!token) { addMessage("assistant", "يلزم تسجيل الدخول أولاً. افتح ⚙ وأدخل بيانات حساب JASSIM؛ لا ترسل كلمة المرور داخل المحادثة."); return; }
+  if (gatewayMode !== "gateway" && !token) { addMessage("assistant", "يلزم تسجيل الدخول أولاً. افتح ⚙ وأدخل بيانات حساب JASSIM؛ لا ترسل كلمة المرور داخل المحادثة."); return; }
   setBusy(true);
   const waiting = addMessage("assistant", "جارٍ التفكير…");
   waiting.querySelector(".bubble p").classList.add("typing");
@@ -213,9 +221,11 @@ async function sendMessage(message) {
       : "";
     const modelMessage = sceneDirective + text;
     try {
-      response = await fetch(base + "/api/chat", {
+      response = await fetch(base + (gatewayMode === "gateway" ? "/api/ai/generate" : "/api/chat"), {
         method: "POST",
-        headers: { "Content-Type": "application/json", "Authorization": "Bearer " + token },
+        headers: gatewayMode === "gateway"
+          ? { "Content-Type": "application/json" }
+          : { "Content-Type": "application/json", "Authorization": "Bearer " + token },
         body: JSON.stringify({ message: modelMessage, conversation_id: conversationId }),
         signal: controller.signal, cache: "no-store"
       });
