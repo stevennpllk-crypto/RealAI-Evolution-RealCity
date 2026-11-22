@@ -38,7 +38,7 @@ assert.ok(app.includes("async function verifyGateway(base)"), "server health mus
 assert.match(app, /fetch\(base\s*\+\s*"\/health"/, "connection status must use JASSIM health endpoint");
 assert.match(app, /data\.ok\s*===\s*true\s*&&\s*data\.service\s*===\s*"JASSIM AI"/, "health must identify the actual JASSIM server");
 assert.match(app, /let gatewayReady\s*=\s*false/, "server liveness must be tracked separately from successful inference");
-assert.match(app, /الخادم متاح؛ رد النموذج لم يُختبر/, "health must not be presented as proof that model inference works");
+assert.match(app, /الخادم متاح؛ سجّل الدخول لتفعيل المحادثة/, "health must not be presented as proof that model inference works");
 assert.match(app, /تم اختبار رد JASSIM بنجاح/, "only a successful chat response may mark JASSIM as verified");
 assert.match(app, /if\s*\(!answer\.trim\(\)\)\s*throw new Error\("استجابة الخادم لا تحتوي على نص جواب صالح"\)/, "empty upstream responses must not count as successful inference");
 assert.match(app, /عنوان محفوظ، لم يتم التحقق/, "configured URL must not be reported as a live connection");
