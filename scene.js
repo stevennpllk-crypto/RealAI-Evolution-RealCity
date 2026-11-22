@@ -1,4 +1,4 @@
-const ALLOWED_KINDS = new Set(["tree", "building", "sphere", "road", "water", "box"]);
+const ALLOWED_KINDS = new Set(["tree", "palm", "island", "rock", "building", "sphere", "road", "water", "box"]);
 
 export function normalizeSceneObjects(input) {
   if (!Array.isArray(input) || input.length === 0 || input.length > 60) {
@@ -61,10 +61,14 @@ export function buildLocalDemoScene(prompt) {
   const garden = /حديق|أشجار|اشجار|غاب|garden|forest/.test(text);
   if (!island && !house && !city && !garden) return null;
   if (island) {
-    add("water", 0, 0, {color:"#268bb5",scale:3});
-    add("box", 0, .2, {color:"#d7c18a",scale:1.8,name:"رمال الجزيرة"});
-    for (const [x,z] of [[-2,-1],[2,-1],[-1,2],[2,2]]) add("tree",x,z,{color:"#29966b"});
-    add("building",0,-2,{color:"#e2a85d",floors:1});
+    add("water", 0, 0, {color:"#1689bd",scale:3});
+    add("island", 0, .25, {color:"#d8bd7b",scale:1.8,name:"جزيرة رملية"});
+    for (const [x,z] of [[-3,-1],[-2,2],[2,-2],[3,1],[-.5,3],[1,-.5]]) add("palm",x,z,{color:"#239b69",scale:1.15});
+    for (const [x,z] of [[-1,-1],[1,1],[3,-2],[-3,2]]) add("rock",x,z,{color:"#777b78",scale:.7});
+    add("water", 0, .1, {color:"#38b9d4",scale:.45,name:"بحيرة داخلية"});
+    add("box",0,.32,{color:"#d9c17e",scale:.55,name:"شاطئ رملي"});
+    add("sphere",-1,.65,{color:"#f2a84a",scale:.28,name:"زهرة استوائية"});
+    add("sphere",1,.7,{color:"#e96b82",scale:.25,name:"زهرة استوائية"});
   } else if (house) {
     add("building",0,0,{color:"#d8dce5",floors:2,scale:1.5});
     add("road",0,3,{color:"#343b48",scale:1.5});
