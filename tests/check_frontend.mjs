@@ -51,3 +51,11 @@ assert.match(app, /event\.key\.toLowerCase\(\)==="y"/, "Ctrl+Y shortcut must exi
 assert.match(app, /historyBatch\(\(\)=>buildTemplate\(t\)\)/, "template generation must be a single history action");
 assert.match(app, /historyBatch\(\(\)=>loadData\(d\)\)/, "project loading must be a single history action");
 assert.match(app, /history\.length>40/, "history must have a bounded memory footprint");
+
+assert.match(html, /class="workspace"/, "simplified workspace layout must exist");
+assert.match(html, /<details class="section"/, "tools must be grouped into collapsible sections");
+assert.match(html, /class="advanced-tools"/, "advanced tools must be tucked away");
+assert.match(html, /placeholder="مثلاً: أنشئ جزيرة خضراء/, "AI prompt must include a simple example");
+assert.match(html, /id="saveBtn"/, "simple save action must remain available");
+assert.match(html, /id="generateBtn"/, "AI scene generation action must remain available");
+console.log("Simplified Arabic workspace layout checks passed.");
